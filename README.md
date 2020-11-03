@@ -25,3 +25,7 @@ A tool for parse address,phone, email, facebook, twitter, linkedin, contact link
 
 `print(result)`
 
+Note: MainAddress is an Object, and can be further extacted like:
+
+print(result['Mainaddress'].city)
+
