@@ -19,7 +19,7 @@ def visiableText(page):
 def toDomain(link):
     return (re.sub(r'^(https?://)?(www\d?\.)?','', link).split('/')+[''])[0].strip()
 
-def parsePage(page,domain='', tojson=False):
+def parse(page,domain='', tojson=False):
     result = {}        
     soup = BeautifulSoup(page,'lxml')
     vis = visiableText(page)
@@ -49,6 +49,6 @@ def parsePage(page,domain='', tojson=False):
     if tojson:
       if 'Mainaddress' in result:
         result['Mainaddress'] = str(result['Mainaddress'])
-      if ['addresses'] in result:
+      if 'addresses' in result:
         result['addresses'] = [str(a) for a in result['addresses']]
     return result
