@@ -15,7 +15,8 @@ A tool for parse address,phone, email, facebook, twitter, linkedin, contact link
 
 ### usage
 
-```from zacktools import pageparser
+```
+from zacktools import pageparser
 import requests
 res = requests.get('http://rel8ed.to')
 result = pageparser.parse(res.content)
