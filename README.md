@@ -29,3 +29,7 @@ Note: MainAddress is an Object, and can be further extacted like:
 
 print(result['Mainaddress'].city)
 
+If want to convert to json directly, add parameters tojson=True
+
+result = pageparser.parse(res.content, tojson=True)
+

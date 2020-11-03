@@ -1,11 +1,15 @@
 import setuptools
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setuptools.setup(
     name="zacktools", # Replace with your own username
     version="0.0.1",
     author="Zack Dai",
     author_email="zdai@brocku.ca",
-    description="Zack's common tools",
+    description="Zack's ommon tools",
+    long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/ZackAnalysis/zacktools",
     classifiers=[
