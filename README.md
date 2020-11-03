@@ -18,11 +18,8 @@ A tool for parse address,phone, email, facebook, twitter, linkedin, contact link
 `from zacktools import pageparser`
 
 `import requests`
-
 `res = requests.get('http://rel8ed.to')`
-
 `result = pageparser.parse(res.content)`
-
 `print(result)`
 
 Note: MainAddress is an Object, and can be further extacted like:
@@ -30,7 +27,7 @@ Note: MainAddress is an Object, and can be further extacted like:
 print(result['Mainaddress'].city)
 
 If want to convert to json directly, add parameters tojson=True
-
+```
 result = pageparser.parse(res.content, tojson=True)
 
 import json
@@ -52,5 +49,5 @@ print(json.dumps(result2, indent=2))
     "1 St. Paul St., Unit A303, St. Catharines, ON L2R 7L2"
   ]
 }
-
+```
 ### test it [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1aE8PeQhJym8G6I_yHVfqIuydod5tlQuQ?usp=sharing)
