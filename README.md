@@ -28,9 +28,9 @@ print(result['Mainaddress'].city)
 
 If want to convert to json directly, add parameters tojson=True
 ```
-result = pageparser.parse(res.content, tojson=True)
-
 import json
+
+result2 = pageparser.parse(res.content, tojson=True)
 
 print(json.dumps(result2, indent=2))
 
