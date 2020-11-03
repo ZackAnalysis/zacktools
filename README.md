@@ -3,11 +3,11 @@
 ### Useful tools created by zackdai
 
 # install
-pip install zacktools
+`pip install zacktools`
 
 or from git
 
-p3 install git+https://github.com/ZackAnalysis/zacktools.git
+`pip3 install git+https://github.com/ZackAnalysis/zacktools.git`
 
 ## pageparser
 
@@ -15,13 +15,13 @@ A tool for parse address,phone, email, facebook, twitter, linkedin, contact link
 
 ### usage
 
-`from zacktools import pageparser
+`from zacktools import pageparser`
 
-import requests
+`import requests`
 
-res = requests.get('http://rel8ed.to')
+`res = requests.get('http://rel8ed.to')`
 
-result = pageparser.parse(res.content)
+`result = pageparser.parse(res.content)`
 
-print(result)
+`print(result)`
 `
