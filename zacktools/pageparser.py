@@ -39,7 +39,7 @@ def parse(page,domain='', tojson=False):
       result['contactlink'] = ([l for l in innerLinks if 'contact' in l or 'location' in l] + [''])[0]
       result['aboutlink'] = ([l for l in innerLinks if 'about' in l] + [''])[0]
 
-    result['title'] = soup.find('title').text.replace('\n','').strip()
+    result['title'] = soup.find('title').text.replace('\n','').strip() if soup.find('title') esle ''
     result['email'] = ';'.join(re.findall(r'([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)', vis))
     result['phone'] = ';'.join(re.findall(r'(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})', vis))
 
