@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup, Comment
 from collections import Counter
-import pyap, re
+import pyap, re, requests
 
 def visiableText(page):
     soup = BeautifulSoup(page, 'lxml')
@@ -20,7 +20,20 @@ def toDomain(link):
     return (re.sub(r'^(https?://)?(www\d?\.)?','', link).split('/')+[''])[0].strip()
 
 def parse(page,domain='', tojson=False):
-    result = {}        
+    result = {
+              'title':'',
+              'corpName':'',
+              'contactLink':'', 
+              'aboutLink':'', 
+              'email':'',
+              'phone':'',
+              'mainAddress':'',
+              'addresses':[],
+              'facebook':'',
+              'twitter':'',
+              'instagram':'',
+              'linkedin':''
+              }        
     soup = BeautifulSoup(page,'lxml')
     vis = visiableText(page)
     addresses = pyap.parse(vis, country='CA')
@@ -36,19 +49,39 @@ def parse(page,domain='', tojson=False):
         domain = toDomain(domain)
 
       innerLinks = [f'http://{domain}'+s if s.startswith('/') else s for s in allLinks if s.startswith('/') or domain in s]
-      result['contactlink'] = ([l for l in innerLinks if 'contact' in l or 'location' in l] + [''])[0]
-      result['aboutlink'] = ([l for l in innerLinks if 'about' in l] + [''])[0]
+      result['contactLink'] = ([l for l in innerLinks if 'contact' in l.lower() or 'location' in l.lower()] + [''])[0]
+      result['aboutLink'] = ([l for l in innerLinks if 'about' in l.lower()] + [''])[0]
 
-    result['title'] = soup.find('title').text.replace('\n','').strip() if soup.find('title') esle ''
+    result['title'] = soup.find('title').text.replace('\n','').strip() if soup.find('title') else ''
+    namepattern = r'\W?'.join([l for l in domain.split('.')[0]])
+
     result['email'] = ';'.join(re.findall(r'([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)', vis))
     result['phone'] = ';'.join(re.findall(r'(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})', vis))
 
+    if not addresses and result['aboutLink']:
+      try:
+        res = requests.get(result['aboutLink'])
+        resvis = visiableText(res.content)
+        addresses = pyap.parse(resvis, country='CA')
+        addresses += pyap.parse(resvis, country='US')
+      except:
+        pass
+    names = []
+    if result['title']:
+      names = re.findall(namepattern, result['title'], re.I)
+    elif result['aboutLink']:
+      try:
+        aboutres = requests.get(result['aboutLink'])
+        aboutvis = visiableText(aboutres.content)
+        names = re.findall(namepattern, aboutvis, re.I)
+    if names:
+      result['corpName'] = sorted(names, key=lambda x: len(x.split(' ')), reverse=True)[0]
     if addresses:
-        result['Mainaddress'] = addresses[-1]
+        result['mainAddress'] = addresses[-1]
         result['addresses'] = addresses
     if tojson:
-      if 'Mainaddress' in result:
-        result['Mainaddress'] = str(result['Mainaddress'])
+      if 'mainAddress' in result:
+        result['mainAddress'] = str(result['mainAddress'])
       if 'addresses' in result:
         result['addresses'] = [str(a) for a in result['addresses']]
     return result
