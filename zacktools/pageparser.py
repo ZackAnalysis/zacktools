@@ -74,6 +74,8 @@ def parse(page,domain='', tojson=False):
         aboutres = requests.get(result['aboutLink'])
         aboutvis = visiableText(aboutres.content)
         names = re.findall(namepattern, aboutvis, re.I)
+      except:
+        pass
     if names:
       result['corpName'] = sorted(names, key=lambda x: len(x.split(' ')), reverse=True)[0]
     if addresses:
