@@ -4,13 +4,13 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="zacktools", # Replace with your own username
-    version="0.0.181",
+    name="zacktools",
+    version="0.0.23",
     author="Zack Dai",
     author_email="zdai@brocku.ca",
     description="Zack's ommon tools",
     long_description=long_description,
-    long_description_content_type="text/markdown",
+    long_description_content_type='text/markdown',
     url="https://github.com/ZackAnalysis/zacktools",
     classifiers=[
         "Programming Language :: Python :: 3",
