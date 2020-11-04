@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="zacktools", # Replace with your own username
-    version="0.0.15",
+    version="0.0.18",
     author="Zack Dai",
     author_email="zdai@brocku.ca",
     description="Zack's ommon tools",
