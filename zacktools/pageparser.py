@@ -19,7 +19,7 @@ def visiableText(page):
 def toDomain(link):
     return (re.sub(r'^(https?://)?(www\d?\.)?','', link).split('/')+[''])[0].strip()
 
-def parse(page,domain='', tojson=False):
+def parse(page,domain=''):
     result = {
               'title':'',
               'corpName':'',
@@ -32,12 +32,20 @@ def parse(page,domain='', tojson=False):
               'facebook':'',
               'twitter':'',
               'instagram':'',
-              'linkedin':''
+              'linkedin':'',
+              'city':'',
+              'region':'',
+              'country':'',
+              'postalCode':''
               }        
     soup = BeautifulSoup(page,'lxml')
     vis = visiableText(page)
     addresses = pyap.parse(vis, country='CA')
     addresses += pyap.parse(vis, country='US')
+    addresses = [a for a in addresses if not re.findall(r'\band\b', str(a), re.I) and not re.findall(r'\bis\b', str(a), re.I)]
+    addressesNoAnd = [a for a in addresses if not re.findall(r'\band\b', str(a), re.I)]
+    if len(addressesNoAnd)>1:
+      addresses = addressesNoAnd
     allLinks = [s.get('href') for s in soup.select('a[href]')]
     allLinks = [s for s in allLinks if 'javascript' not in s and 'void' not in s]
     if allLinks:
@@ -64,7 +72,10 @@ def parse(page,domain='', tojson=False):
         resvis = visiableText(res.content)
         addresses = pyap.parse(resvis, country='CA')
         addresses += pyap.parse(resvis, country='US')
-      except:
+        addressesNoAnd = [a for a in addresses if not re.findall(r'\band\b', str(a), re.I)]
+        if len(addressesNoAnd)>1:
+          addresses = addressesNoAnd
+      except Exception as e:
         pass
     names = []
     if result['title']:
@@ -79,11 +90,19 @@ def parse(page,domain='', tojson=False):
     if names:
       result['corpName'] = sorted(names, key=lambda x: len(x.split(' ')), reverse=True)[0]
     if addresses:
-        result['mainAddress'] = addresses[-1]
+        result['mainAddress'] = re.split(r'\band\b(?i)',str(addresses[-1]))[-1]
         result['addresses'] = addresses
-    if tojson:
-      if 'mainAddress' in result:
-        result['mainAddress'] = str(result['mainAddress'])
-      if 'addresses' in result:
-        result['addresses'] = [str(a) for a in result['addresses']]
+    if result['mainAddress']:
+      result['city'] = addresses[-1].city
+      result['region'] = addresses[-1].region1
+      result['country'] = addresses[-1].country_id
+      result['postalCode'] = addresses[-1].postal_code
+      result['addressLine'] = addresses[-1].full_street
+    result['addresses'] = [str(a) for a in result['addresses']]
     return result
+
+
+if __name__ == '__main__':
+  res = requests.get('https://mamayolandas.ca')
+  result = parse(res.content)
+  print(result)
