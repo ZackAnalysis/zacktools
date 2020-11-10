@@ -36,7 +36,8 @@ def parse(page,domain=''):
               'city':'',
               'region':'',
               'country':'',
-              'postalCode':''
+              'postalCode':'',
+              'addressLine':''
               }        
     soup = BeautifulSoup(page,'lxml')
     vis = visiableText(page)
