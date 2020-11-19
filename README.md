@@ -23,6 +23,7 @@ result = pageparser.parse(res.content)
 print(result)
 ```
 
+```
 {
   "facebook": "https://www.facebook.com/rel8edto/",
   "twitter": "https://twitter.com/rel8edto",
