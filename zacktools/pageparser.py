@@ -79,9 +79,9 @@ def parse(page,domain=''):
       except Exception as e:
         pass
     names = []
-    if result['title']:
+    if result['title'] and namepattern:
       names = re.findall(namepattern, result['title'], re.I)
-    elif result['aboutLink']:
+    elif result['aboutLink']  and namepattern:
       try:
         aboutres = requests.get(result['aboutLink'])
         aboutvis = visiableText(aboutres.content)
@@ -104,6 +104,6 @@ def parse(page,domain=''):
 
 
 if __name__ == '__main__':
-  res = requests.get('https://mamayolandas.ca')
+  res = requests.get('https://goodprice.com')
   result = parse(res.content)
   print(result)
