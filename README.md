@@ -23,18 +23,6 @@ result = pageparser.parse(res.content)
 print(result)
 ```
 
-Note: MainAddress is an Object, and can be further extacted like:
-
-`print(result['Mainaddress'].city)`
-
-If want to convert to json directly, add parameters tojson=True
-```
-import json
-
-result2 = pageparser.parse(res.content, tojson=True)
-
-print(json.dumps(result2, indent=2))
-
 {
   "facebook": "https://www.facebook.com/rel8edto/",
   "twitter": "https://twitter.com/rel8edto",
