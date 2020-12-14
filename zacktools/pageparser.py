@@ -80,6 +80,17 @@ def parse(page,domain=''):
           addresses = addressesNoAnd
       except Exception as e:
         pass
+    if not addresses and result['contactLink']:
+      try:
+        res = requests.get(result['aboutLink'])
+        resvis = visiableText(res.content)
+        addresses = pyap.parse(resvis, country='CA')
+        addresses += pyap.parse(resvis, country='US')
+        addressesNoAnd = [a for a in addresses if not re.findall(r'\band\b', str(a), re.I)]
+        if len(addressesNoAnd)>1:
+          addresses = addressesNoAnd
+      except Exception as e:
+        pass
     names = []
     if result['title'] and namepattern:
       names = re.findall(namepattern, result['title'], re.I)
@@ -106,6 +117,6 @@ def parse(page,domain=''):
 
 
 if __name__ == '__main__':
-  res = requests.get('https://goodprice.com')
+  res = requests.get('http://cloudcomputingchicagoland.net')
   result = parse(res.content)
   print(result)
