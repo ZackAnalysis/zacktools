@@ -54,7 +54,7 @@ def parse(page,domain=''):
       for social in ['facebook', 'twitter', 'instagram','linkedin']:
         result[social] = ([l for l in allLinks if social in l]+[''])[0]
       if not domain:
-        domain = Counter([toDomain(l) for l in allLinks]).most_common(1)[0][0]
+        domain = Counter([toDomain(l) for l in allLinks if 'facebook' not in l and 'twitter' not in l and 'linkedin' not in l]).most_common(1)[0][0]
       else:
         domain = toDomain(domain)
 
@@ -82,7 +82,7 @@ def parse(page,domain=''):
         pass
     if not addresses and result['contactLink']:
       try:
-        res = requests.get(result['aboutLink'])
+        res = requests.get(result['contactLink'])
         resvis = visiableText(res.content)
         addresses = pyap.parse(resvis, country='CA')
         addresses += pyap.parse(resvis, country='US')
@@ -118,5 +118,5 @@ def parse(page,domain=''):
 
 if __name__ == '__main__':
   res = requests.get('http://cloudcomputingchicagoland.net')
-  result = parse(res.content)
+  result = parse(res.content,domain='cloudcomputingchicagoland.net')
   print(result)
