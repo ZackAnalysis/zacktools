@@ -59,7 +59,7 @@ def parse(page,domain=''):
         domain = toDomain(domain)
 
       # innerLinks = [f'http://{domain}'+s if s.startswith('/') else s for s in allLinks if s.startswith('/') or domain in s]
-      innerLinks = [urljoin(f'http://{domain}',s) if 'http' not in s else s for s in allLinks if s.startswith('/') or domain in s]
+      innerLinks = [urljoin(f'http://{domain}',s) if 'http' not in s else s for s in allLinks if 'http' not in s or domain in s]
       result['contactLink'] = ([l for l in innerLinks if 'contact' in l.lower() or 'location' in l.lower()] + [''])[0]
       result['aboutLink'] = ([l for l in innerLinks if 'about' in l.lower()] + [''])[0]
 
