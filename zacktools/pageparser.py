@@ -45,7 +45,7 @@ def parse(page,domain=''):
               }        
     soup = BeautifulSoup(page,'lxml')
     vis = visiableText(page)
-    meta = soup.select('meta[name="description"]')
+    meta = soup.findAll('meta',{"name":"description", "content":True})
     if meta:
       result['meta'] = meta[0]['content']
 
@@ -124,6 +124,6 @@ def parse(page,domain=''):
 
 
 if __name__ == '__main__':
-  res = requests.get('http://bestbuy.ca', timeout=20, headers=headers)
-  result = parse(res.content,domain='bestbuy.ca')
+  res = requests.get('http://www.rel8ed.to', timeout=20, headers=headers)
+  result = parse(res.content,domain='rel8ed.to')
   print(result)
