@@ -3,6 +3,8 @@ from collections import Counter
 import pyap, re, requests
 from urllib.parse import urljoin
 
+headers = { "User-Agent": "Mozilla/5.0"}
+
 def visiableText(page):
     soup = BeautifulSoup(page, 'lxml')
     comm = soup.findAll(text=lambda text:isinstance(text, Comment))
@@ -38,10 +40,15 @@ def parse(page,domain=''):
               'region':'',
               'country':'',
               'postalCode':'',
-              'addressLine':''
+              'addressLine':'',
+              'meta':''
               }        
     soup = BeautifulSoup(page,'lxml')
     vis = visiableText(page)
+    meta = soup.select('meta[name="description"]')
+    if meta:
+      result['meta'] = meta[0]['content']
+
     addresses = pyap.parse(vis, country='CA')
     addresses += pyap.parse(vis, country='US')
     addresses = [a for a in addresses if not re.findall(r'\band\b', str(a), re.I) and not re.findall(r'\bis\b', str(a), re.I)]
@@ -71,7 +78,7 @@ def parse(page,domain=''):
 
     if not addresses and result['aboutLink']:
       try:
-        res = requests.get(result['aboutLink'])
+        res = requests.get(result['aboutLink'], timeout=15, headers=headers)
         resvis = visiableText(res.content)
         addresses = pyap.parse(resvis, country='CA')
         addresses += pyap.parse(resvis, country='US')
@@ -82,7 +89,7 @@ def parse(page,domain=''):
         pass
     if not addresses and result['contactLink']:
       try:
-        res = requests.get(result['contactLink'])
+        res = requests.get(result['contactLink'], timeout=20, headers=headers)
         resvis = visiableText(res.content)
         addresses = pyap.parse(resvis, country='CA')
         addresses += pyap.parse(resvis, country='US')
@@ -96,7 +103,7 @@ def parse(page,domain=''):
       names = re.findall(namepattern, result['title'], re.I)
     elif result['aboutLink']  and namepattern:
       try:
-        aboutres = requests.get(result['aboutLink'])
+        aboutres = requests.get(result['aboutLink'], timeout=15, headers=headers)
         aboutvis = visiableText(aboutres.content)
         names = re.findall(namepattern, aboutvis, re.I)
       except:
@@ -117,6 +124,6 @@ def parse(page,domain=''):
 
 
 if __name__ == '__main__':
-  res = requests.get('http://cloudcomputingchicagoland.net')
-  result = parse(res.content,domain='cloudcomputingchicagoland.net')
+  res = requests.get('http://bestbuy.ca', timeout=20, headers=headers)
+  result = parse(res.content,domain='bestbuy.ca')
   print(result)
