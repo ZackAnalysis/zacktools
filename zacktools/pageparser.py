@@ -165,11 +165,11 @@ def standardScrape(url, parkingterms=[r'godaddy', r'domain is available for sale
         statusCode = res.status_code
     except Exception as e:
         statusCode, webstatus = "time out", "Presumed Inactive"
-        return {'statusCode':"time out","webstatus":"Presumed Inactive"}
+        return {'statusCode':"time out","webstatus":"Presumed Inactive"}, b''
     if re.findall(parkingpattern, res.content.decode('utf-8', 'ignore')):
-        return {'statusCode':statusCode,"webstatus":"parking"}
+        return {'statusCode':statusCode,"webstatus":"parking"}, b''
     if statusCode in [523, 503, 502, 500, 410, 409, 404]:
-        return {'statusCode':statusCode,"webstatus":"inactive"}
+        return {'statusCode':statusCode,"webstatus":"inactive"}, b''
     else:
         webstatus = 'active'
         result = parse(res.content, domain=domain)
