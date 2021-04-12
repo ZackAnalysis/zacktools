@@ -106,6 +106,7 @@ def parse(page, domain=''):
             result['aboutText'] = resvis
             addresses = pyap.parse(resvis, country='CA')
             addresses += pyap.parse(resvis, country='US')
+            addresses = [a for a in addresses if not re.findall(r'\band\b', str(a), re.I) and not re.findall(r'\bis\b', str(a), re.I)]
             addressesNoAnd = [a for a in addresses if not re.findall(
                 r'\band\b', str(a), re.I)]
             if len(addressesNoAnd) > 1:
@@ -120,6 +121,8 @@ def parse(page, domain=''):
             result['contactText'] = resvis
             addresses = pyap.parse(resvis, country='CA')
             addresses += pyap.parse(resvis, country='US')
+            addresses = [a for a in addresses if not re.findall(r'\band\b', str(a), re.I) and not re.findall(r'\bis\b', str(a), re.I)]
+
             addressesNoAnd = [a for a in addresses if not re.findall(
                 r'\band\b', str(a), re.I)]
             if len(addressesNoAnd) > 1:
