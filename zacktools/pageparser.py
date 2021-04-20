@@ -169,22 +169,23 @@ def standardScrape(url, parkingterms=[r'godaddy', r'domain is available for sale
     except Exception as e:
         statusCode, webstatus = "time out", "Presumed Inactive"
         return {'statusCode':"time out","webstatus":"Presumed Inactive"}, b''
-    if re.findall(parkingpattern, res.content.decode('utf-8', 'ignore')):
-        return {'statusCode':statusCode,"webstatus":"parking"}, b''
+
     if statusCode in [523, 503, 502, 500, 410, 409, 404]:
         return {'statusCode':statusCode,"webstatus":"inactive"}, b''
     else:
         webstatus = 'active'
         result = parse(res.content, domain=domain)
+        if re.findall(parkingpattern, result.get('homepageText','')):
+
+            return {'statusCode':statusCode,"webstatus":"parking"}, b''
         result['statusCode'] = statusCode
         result['webstatus'] = webstatus
         return result, res.content
 
-
-
 if __name__ == '__main__':
     # res = requests.get('http://keywebpmt.com', timeout=20, headers=headers)
     # result = parse(res.content)
-
-    result, content = standardScrape('http://keywebpmt.com')
+    import kumihotools
+    result,_ = standardScrape('adopttechnologies.com', parkingterms=kumihotools.parkingterms)
+    # result, content = standardScrape('http://keywebpmt.com')
     print(result)
