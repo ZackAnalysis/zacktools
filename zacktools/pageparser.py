@@ -175,8 +175,8 @@ def standardScrape(url, parkingterms=[r'godaddy', r'domain is available for sale
     else:
         webstatus = 'active'
         result = parse(res.content, domain=domain)
+        result['redirectURL'] = toDomain(res.url)
         if re.findall(parkingpattern, result.get('homepageText','')):
-
             return {'statusCode':statusCode,"webstatus":"parking"}, b''
         result['statusCode'] = statusCode
         result['webstatus'] = webstatus
